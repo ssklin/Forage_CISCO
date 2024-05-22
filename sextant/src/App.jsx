@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 import Card from './components/Cards';
 import Banner from './components/Banner';
@@ -21,17 +22,26 @@ async function getMyIpAddress(url) {
 
 export default function App() {
   const title = 'Sextant';
-  let ipAdd = '';
+  const [ipAdd, setIpAdd] = useState('');
 
-  getMyIpAddress(IPv4_API).then(ip => {
-    if (ip) {
-      console.log(`My IP address is: ${ip}`);
-      ipAdd = ip
-    } else {
-      console.log('Failed to retrieve IP address.');
-    }
-  });
-  console.log('App function ' + ipAdd)
+  useEffect(() => {
+    const fetchIpAddress = async () => {
+      try {
+        const ip = await getMyIpAddress(IPv4_API);
+        if (ip) {
+          console.log(`My IP address is: ${ip}`);
+          setIpAdd(ip);
+        } else {
+          console.log('Failed to retrieve IP address.');
+        }
+      } catch (error) {
+        console.error('Error retrieving IP address:', error);
+      }
+    };
+
+    fetchIpAddress();
+  }, []);
+
   return (
     <>
       <div className='col-4 rounded text-bg-primary p-3 mx-auto my-4'>
@@ -45,10 +55,10 @@ export default function App() {
             <Card id={1} ip={ipAdd} />
           </div>
           <div className='col'>
-            <Card id={2} ip={ipAdd} />
+            <Card id={2} />
           </div>
           <div className='col'>
-            <Card id={3} ip={ipAdd} />
+            <Card id={3} />
           </div>
         </div>
       </div>
