@@ -1,10 +1,11 @@
 
-const Card = ({ id, ip }) => {
-    const content = ip ? ip : `Card #${id}`;
-    
+const Card = ({ cardTitle, ip }) => {
     return (
         <div className='rounded text-bg-primary p-3 text-center'>
-            Card #{id} - {content}
+            {cardTitle}
+            <div className="mx-auto mt-2 p-3">
+                {ip}
+            </div>
         </div>
     );
 };

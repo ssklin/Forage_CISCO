@@ -5,8 +5,7 @@ import Banner from './components/Banner';
 
 // https://www.ipify.org/
 const IPv4_API = 'https://api.ipify.org?format=json'
-// const IPv6_API = 'https://api6.ipify.org?format=json'
-// const IPv4_IPv6 = 'https://api64.ipify.org?format=json'
+const IPv6_API = 'https://api64.ipify.org?format=json'
 
 async function getMyIpAddress(url) {
   try {
@@ -22,15 +21,25 @@ async function getMyIpAddress(url) {
 
 export default function App() {
   const title = 'Sextant';
-  const [ipAdd, setIpAdd] = useState('');
+
+  const IPv4 = 'IPv4';
+  const IPv6 = 'IPv6';
+
+  const [ip4Add, setIp4Add] = useState('');
+  const [ip6Add, setIp6Add] = useState('');
 
   useEffect(() => {
-    const fetchIpAddress = async () => {
+    const fetchIpAddress = async (url, ipVersion) => {
       try {
-        const ip = await getMyIpAddress(IPv4_API);
+        const ip = await getMyIpAddress(url);
         if (ip) {
+          if (ipVersion === IPv4) {
+            setIp4Add(ip);
+          } else if (ipVersion === IPv6) {
+            setIp6Add(ip)
+          }
           console.log(`My IP address is: ${ip}`);
-          setIpAdd(ip);
+
         } else {
           console.log('Failed to retrieve IP address.');
         }
@@ -39,7 +48,8 @@ export default function App() {
       }
     };
 
-    fetchIpAddress();
+    fetchIpAddress(IPv4_API, IPv4);
+    fetchIpAddress(IPv6_API, IPv6);
   }, []);
 
   return (
@@ -52,13 +62,10 @@ export default function App() {
       <div className='container'>
         <div className='row my-2'>
           <div className='col'>
-            <Card id={1} ip={ipAdd} />
+            <Card cardTitle={IPv4} ip={ip4Add} />
           </div>
           <div className='col'>
-            <Card id={2} />
-          </div>
-          <div className='col'>
-            <Card id={3} />
+            <Card cardTitle={IPv6} ip={ip6Add} />
           </div>
         </div>
       </div>
